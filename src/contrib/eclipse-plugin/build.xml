@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<project default="jar" name="eclipse-plugin">
+
+  <import file="../build-contrib.xml"/>
+
+  <path id="eclipse-sdk-jars">
+
+    <fileset dir="${eclipse.home}/plugins/">
+      <include name="org.eclipse.ui*.jar"/>
+      <include name="org.eclipse.jdt*.jar"/>
+      <include name="org.eclipse.core*.jar"/>
+      <include name="org.eclipse.equinox*.jar"/>
+      <include name="org.eclipse.debug*.jar"/>
+      <include name="org.eclipse.osgi*.jar"/>
+      <include name="org.eclipse.swt*.jar"/>
+      <include name="org.eclipse.jface*.jar"/>
+      <include name="org.eclipse.team.cvs.ssh2*.jar"/>
+      <include name="com.jcraft.jsch*.jar"/>
+    </fileset> 
+  </path>
+
+  <path id="hadoop-sdk-jars">
+    <fileset dir="${hadoop.home}/libexec/share/hadoop/mapreduce">
+      <include name="hadoop*.jar"/>
+    </fileset> 
+    <fileset dir="${hadoop.home}/libexec/share/hadoop/hdfs">
+      <include name="hadoop*.jar"/>
+    </fileset> 
+    <fileset dir="${hadoop.home}/libexec/share/hadoop/common">
+      <include name="hadoop*.jar"/>
+    </fileset> 
+  </path>
+
+
+
+  <!-- Override classpath to include Eclipse SDK jars -->
+  <path id="classpath">
+    <pathelement location="${build.classes}"/>
+    <!--pathelement location="${hadoop.root}/build/classes"/-->
+    <path refid="eclipse-sdk-jars"/>
+    <path refid="hadoop-sdk-jars"/>
+  </path>
+
+  <!-- Skip building if eclipse.home is unset. -->
+  <target name="check-contrib" unless="eclipse.home">
+    <property name="skip.contrib" value="yes"/>
+    <echo message="eclipse.home unset: skipping eclipse plugin"/>
+  </target>
+
+ <target name="compile" depends="init, ivy-retrieve-common" unless="skip.contrib">
+    <echo message="contrib: ${name}"/>
+    <javac
+     encoding="${build.encoding}"
+     srcdir="${src.dir}"
+     includes="**/*.java"
+     destdir="${build.classes}"
+     debug="${javac.debug}"
+     deprecation="${javac.deprecation}">
+     <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <!-- Override jar target to specify manifest -->
+  <target name="jar" depends="compile" unless="skip.contrib">
+    <mkdir dir="${build.dir}/lib"/>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/mapreduce">
+           <include name="hadoop*.jar"/>
+          </fileset>
+    </copy>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/common">
+           <include name="hadoop*.jar"/>
+          </fileset>
+    </copy>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/hdfs">
+           <include name="hadoop*.jar"/>
+          </fileset>
+    </copy>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/yarn">
+           <include name="hadoop*.jar"/>
+          </fileset>
+    </copy>
+
+    <copy  todir="${build.dir}/classes" verbose="true">
+          <fileset dir="${root}/src/java">
+           <include name="*.xml"/>
+          </fileset>
+    </copy>
+
+
+
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/protobuf-java-${protobuf.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/log4j-${log4j.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-cli-${commons-cli.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-configuration2-${commons-configuration.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-lang-${commons-lang.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-collections-${commons-collections.version}.jar"  todir="${build.dir}/lib" verbose="true"/>  
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/jackson-core-asl-${jackson.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/jackson-mapper-asl-${jackson.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/slf4j-log4j12-${slf4j-log4j12.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/slf4j-api-${slf4j-api.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/guava-${guava.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/hadoop-auth-${hadoop.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-cli-${commons-cli.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/netty-${netty.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/htrace-core4-${htrace.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
+
+    <jar
+      jarfile="${build.dir}/hadoop-${name}-${hadoop.version}.jar"
+      manifest="${root}/META-INF/MANIFEST.MF">
+      <manifest>
+   <attribute name="Bundle-ClassPath" 
+    value="classes/, 
+ lib/hadoop-mapreduce-client-core-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-common-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-jobclient-${hadoop.version}.jar,
+ lib/hadoop-auth-${hadoop.version}.jar,
+ lib/hadoop-common-${hadoop.version}.jar,
+ lib/hadoop-hdfs-${hadoop.version}.jar,
+ lib/protobuf-java-${protobuf.version}.jar,
+ lib/log4j-${log4j.version}.jar,
+ lib/commons-cli-${commons-cli.version}.jar,
+ lib/commons-configuration-${commons-configuration.version}.jar,
+ lib/commons-httpclient-${commons-httpclient.version}.jar,
+ lib/commons-lang-${commons-lang.version}.jar,  
+ lib/commons-collections-${commons-collections.version}.jar,  
+ lib/jackson-core-asl-${jackson.version}.jar,
+ lib/jackson-mapper-asl-${jackson.version}.jar,
+ lib/slf4j-log4j12-${slf4j-log4j12.version}.jar,
+ lib/slf4j-api-${slf4j-api.version}.jar,
+ lib/guava-${guava.version}.jar,
+ lib/netty-${netty.version}.jar,
+ lib/woodstox-core-5.0.3.jar,
+ lib/stax2-api-3.1.4.jar,
+ lib/commons-beanutils-1.9.3.jar,
+ lib/commons-lang3-3.4.jar,
+ lib/commons-configuration2-2.1.1.jar,
+ lib/htrace-core4-${htrace.version}.jar"/>
+   </manifest>
+      <fileset dir="${build.dir}" includes="classes/ lib/"/>
+      <!--fileset dir="${build.dir}" includes="*.xml"/-->
+      <fileset dir="${root}" includes="resources/ plugin.xml"/>
+    </jar>
+  </target>
+
+</project>
