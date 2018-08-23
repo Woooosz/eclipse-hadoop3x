@@ -48,4 +48,5 @@ How to debug
 Note: compile issues resolve: 
 --------------------------------------
 1. For different hadoop, adjust ${hadoop2x-eclipse-plugin-master}/ivy/libraries.properties, to match hadoop dependency lib version.
-1. modify ${hadoop2x-eclipse-plugin}/src/contrib/eclipse-plugin/build.xml, in the node: <attribute name="Bundle-ClassPath" ....  to add the jar needed. 
+2. modify ${hadoop3x-eclipse}/src/contrib/eclipse-plugin/build.xml, in the node: <attribute name="Bundle-ClassPath" ....  to add the jar needed. 
+3. For eclipse, do **not** use eclipse-inst, install eclipse **FULL VERSION(SDK)** instead.
