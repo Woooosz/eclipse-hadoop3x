@@ -81,22 +81,32 @@
     <mkdir dir="${build.dir}/lib"/>
     <copy  todir="${build.dir}/lib/" verbose="true">
           <fileset dir="${hadoop.home}/libexec/share/hadoop/mapreduce">
-           <include name="hadoop*.jar"/>
+           <include name="*.jar"/>
           </fileset>
     </copy>
     <copy  todir="${build.dir}/lib/" verbose="true">
           <fileset dir="${hadoop.home}/libexec/share/hadoop/common">
-           <include name="hadoop*.jar"/>
+           <include name="*.jar"/>
           </fileset>
     </copy>
     <copy  todir="${build.dir}/lib/" verbose="true">
           <fileset dir="${hadoop.home}/libexec/share/hadoop/hdfs">
-           <include name="hadoop*.jar"/>
+           <include name="*.jar"/>
+          </fileset>
+    </copy>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/hdfs/lib">
+           <include name="*.jar"/>
           </fileset>
     </copy>
     <copy  todir="${build.dir}/lib/" verbose="true">
           <fileset dir="${hadoop.home}/libexec/share/hadoop/yarn">
-           <include name="hadoop*.jar"/>
+           <include name="*.jar"/>
+          </fileset>
+    </copy>
+    <copy  todir="${build.dir}/lib/" verbose="true">
+          <fileset dir="${hadoop.home}/libexec/share/hadoop/common/lib">
+           <include name="*.jar"/>
           </fileset>
     </copy>
 
@@ -123,7 +133,12 @@
     <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-cli-${commons-cli.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
     <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/netty-${netty.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
     <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/htrace-core4-${htrace.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
-
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/woodstox-core-5.0.3.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/stax2-api-3.1.4.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-beanutils-1.9.3.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-lang3-3.4.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/commons-configuration2-2.1.1.jar"  todir="${build.dir}/lib" verbose="true"/>
+    <copy file="${hadoop.home}/libexec/share/hadoop/common/lib/htrace-core4-${htrace.version}.jar"  todir="${build.dir}/lib" verbose="true"/>
     <jar
       jarfile="${build.dir}/hadoop-${name}-${hadoop.version}.jar"
       manifest="${root}/META-INF/MANIFEST.MF">
@@ -131,11 +146,21 @@
    <attribute name="Bundle-ClassPath" 
     value="classes/, 
  lib/hadoop-mapreduce-client-core-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-hs-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-hs-plugins-${hadoop.version}.jar,
  lib/hadoop-mapreduce-client-common-${hadoop.version}.jar,
  lib/hadoop-mapreduce-client-jobclient-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-nativetask-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-shuffle-${hadoop.version}.jar,
+ lib/hadoop-mapreduce-client-uploader-${hadoop.version}.jar,
  lib/hadoop-auth-${hadoop.version}.jar,
  lib/hadoop-common-${hadoop.version}.jar,
  lib/hadoop-hdfs-${hadoop.version}.jar,
+ lib/hadoop-hdfs-client-${hadoop.version}.jar,
+ lib/hadoop-hdfs-httpfs-${hadoop.version}.jar,
+ lib/hadoop-hdfs-native-client-${hadoop.version}.jar,
+ lib/hadoop-hdfs-nfs-${hadoop.version}.jar,
+ lib/hadoop-hdfs-rbf-${hadoop.version}.jar,
  lib/protobuf-java-${protobuf.version}.jar,
  lib/log4j-${log4j.version}.jar,
  lib/commons-cli-${commons-cli.version}.jar,
